@@ -1,0 +1,117 @@
+/* 1. SETUP & FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+    --bg-color: #f2f2f2; /* Light grey background from the video */
+    --card-bg: #ffffff;
+    --text-primary: #111111;
+    --text-secondary: #666666;
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    padding: 60px 20px 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 2. THE CARD (Bento Box Style) */
+.card, .about-card, .education-card, .contact-card {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 700px;
+    padding: 50px;
+    border-radius: 24px; /* More rounded like the video */
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transition: var(--transition);
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+/* 3. HOVER EFFECTS (Crucial for the "Premium" feel) */
+.card:hover, .about-card:hover, .education-card:hover, .contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+}
+
+/* 4. HERO SECTION */
+.profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 20px; /* Squircle shape from video */
+    margin-bottom: 30px;
+    object-fit: cover;
+}
+
+h1 {
+    font-size: 56px; /* Big bold heading */
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 15px;
+}
+
+.description {
+    font-size: 20px;
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* 5. CONTACT GRID (The Bento Icons) */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.grid-item {
+    background: #fafafa;
+    padding: 30px;
+    border-radius: 18px;
+    text-decoration: none;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+.grid-item:hover {
+    background: #ffffff;
+    border-color: #eee;
+    transform: scale(1.02);
+}
+
+/* 6. FLOATING NAV (The Dock) */
+.floating-nav {
+    position: fixed;
+    bottom: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    padding: 12px 24px;
+    border-radius: 20px;
+    display: flex;
+    gap: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
+.floating-nav i {
+    color: #555;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.floating-nav i:hover {
+    color: #000;
+    transform: scale(1.2);
+}

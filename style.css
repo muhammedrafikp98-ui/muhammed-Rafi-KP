@@ -1,0 +1,721 @@
+/* 1. FONT & ROOT VARIABLES */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap');
+.navbar-wrapper {
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.dock {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 16px;
+  min-height: 56px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.dock-icon {
+  pointer-events: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  color: #444;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer !important;
+  position: relative;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.dock-icon:hover {
+  background: rgba(200, 200, 200, 0.4);
+  transform: translateY(-3px) scale(1.08);
+}
+:root {
+    --bg-color: #f5f5f7;      /* Subtle Apple-style grey */
+    --card-bg: #ffffff;
+    --text-main: #1d1d1f;     /* Deep charcoal */
+    --text-muted: #86868b;    /* Soft grey */
+    --accent: #0071e3;        /* Professional Blue */
+    --radius-lg: 28px;        /* Large rounded corners from video */
+    --radius-sm: 18px;
+    --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* Premium easing */
+}
+
+/* 2. GLOBAL RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    padding: 80px 20px 150px; /* Space for the floating dock */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 3. BENTO CARD SYSTEM */
+.card, .about-card, .education-card, .contact-card {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 650px;
+    padding: 48px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 24px;
+    border: 1px solid rgba(0,0,0,0.02);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+    transition: var(--transition);
+}
+
+/* The "Lift" Effect on Hover */
+.card:hover, .about-card:hover, .education-card:hover, .contact-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+}
+
+/* 4. HERO SECTION */
+.card { text-align: center; }
+
+.profile-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 24px; /* Squircle shape */
+    margin-bottom: 24px;
+    object-fit: cover;
+    background: #eee;
+}
+
+h1 {
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+}
+
+.description {
+    font-size: 20px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+.subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1;
+    margin-bottom: 15px;
+}
+.work {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1;
+    margin-bottom: 15px;
+}
+
+/* 5. EDUCATION & ABOUT DETAILS */
+.edu-item {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+}
+
+.logo img { width: 48px; height: 48px; object-fit: contain; border-radius: 10px; }
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+h3 { font-size: 18px; font-weight: 600; }
+.date { color: var(--text-muted); font-size: 14px; }
+
+/* 6. CONTACT GRID (The Icon Boxes) */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.grid-item {
+    background: #fbfbfd;
+    padding: 24px 12px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    border: 1px solid #f2f2f2;
+    transition: var(--transition);
+}
+
+.grid-item:hover {
+    background: #ffffff;
+    border-color: var(--accent);
+}
+
+.icon-circle {
+    font-size: 22px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: block;
+}
+
+ 
+
+/* DOCK CONTAINER - Handles fixed positioning */
+.dock-container {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: all; /* Allows clicking through the container to content behind */
+    z-index: 9999;
+}
+
+/* THE DOCK - The actual bar */
+.dock {
+    pointer-events: none;  /* Re-enables clicking for the dock itself */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    
+    /* Glassmorphism Effect */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    /* Borders & Shadows */
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 22px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08),
+        0 4px 10px rgba(0, 0, 0, 0.02);
+    
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* INDIVIDUAL ITEMS */
+.dock-item {
+    text-decoration: none;
+    color: #555;
+    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* HOVER ANIMATION (The "Pop" from the video) */
+.dock-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000;
+    transform: translateY(-4px) scale(1.1);
+}
+
+/* THE VERTICAL DIVIDER */
+.dock-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 0 5px;
+}
+
+/* THEME TOGGLE SPECIFIC */
+.theme-toggle i {
+    transition: transform 0.5s ease;
+}
+
+.theme-toggle:hover i {
+    transform: rotate(45deg);
+}
+
+/* RESPONSIVE: Makes it slightly smaller on mobile */
+@media (max-width: 480px) {
+    .dock {
+        gap: 8px;
+        padding: 8px 14px;
+    }
+    .dock-item {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+}
+
+ {
+  scroll-behavior: smooth;
+}
+
+/* scroll offset fix - stops sections hiding under navbar */
+html {
+  scroll-behavior: smooth;
+}
+
+#Home, #about, #education, #experience, #projects, #skills, #contact {
+  scroll-margin-top: 80px;
+}
+
+/* EXPERIENCE */
+.experience-card {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 650px;
+  padding: 48px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  border: 1px solid rgba(0,0,0,0.02);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+  transition: var(--transition);
+}
+.experience-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+}
+.exp-logo-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #f5f5f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.exp-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.6;
+}
+
+/* PROJECTS */
+.projects-card {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 650px;
+  padding: 48px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  border: 1px solid rgba(0,0,0,0.02);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+  transition: var(--transition);
+}
+.projects-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+}
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+.project-item {
+  background: #fbfbfd;
+  border: 1px solid #f2f2f2;
+  border-radius: var(--radius-sm);
+  padding: 20px 16px;
+  transition: var(--transition);
+}
+.project-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.project-icon { font-size: 24px; }
+.project-tag {
+  font-size: 11px;
+  font-weight: 500;
+  background: #f0f0f5;
+  color: var(--text-muted);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+.project-item h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.project-item p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.project-links {
+  margin-top: 12px;
+}
+.project-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+}
+.project-links a:hover { text-decoration: underline; }
+
+/* SKILLS */
+.skills-card {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 650px;
+  padding: 48px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  border: 1px solid rgba(0,0,0,0.02);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+  transition: var(--transition);
+}
+.skills-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+}
+.skills-group {
+  margin-top: 24px;
+}
+.skills-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tag {
+  font-size: 13px;
+  font-weight: 500;
+  background: #f0f0f5;
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #e8e8ec;
+  transition: all 0.2s ease;
+}
+.tag:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* DOCK IMAGE FIX */
+.dock-icon img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* DOCK SEPARATOR */
+.dock-separator {
+  width: 1px;
+  height: 24px;
+  background: rgba(0,0,0,0.12);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* TOOLTIP */
+.dock-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(20,20,20,0.85);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 4px 10px;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.dock-icon:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ACHIEVEMENTS */
+.achievements-card {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 650px;
+  padding: 48px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  border: 1px solid rgba(0,0,0,0.02);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+  transition: var(--transition);
+}
+
+.achievements-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+}
+
+.achievement-list {
+  margin-top: 28px;
+}
+
+.achievement-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  align-items: flex-start;
+}
+
+.achievement-icon {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  background: #f5f5f7;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.achievement-details {
+  flex: 1;
+}
+
+.achievement-details p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+/* FIX - Font Awesome icons inside dock */
+.dock-icon i {
+  font-size: 16px;
+  color: #444;
+  transition: color 0.2s ease;
+}
+
+.dock-icon:hover i {
+  color: #000;
+}
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 600px) {
+
+  body {
+    padding: 20px 12px 120px;
+  }
+
+  /* Cards */
+  .card, .about-card, .education-card, .experience-card,
+  .projects-card, .skills-card, .achievements-card, .contact-card {
+    padding: 28px 20px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  /* Home section */
+  h1 {
+    font-size: 36px;
+  }
+
+  .profile-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 18px;
+    margin-bottom: 16px;
+  }
+
+  .description {
+    font-size: 16px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  /* About */
+  .about-content p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* Education & Experience */
+  .edu-item {
+    flex-direction: row;
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .logo img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  h3 {
+    font-size: 15px;
+  }
+
+  .date {
+    font-size: 12px;
+  }
+
+  /* Projects - stack to single column */
+  .project-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Skills tags */
+  .skills-tags {
+    gap: 6px;
+  }
+
+  .tag {
+    font-size: 12px;
+    padding: 5px 11px;
+  }
+
+  /* Achievements */
+  .achievement-item {
+    gap: 12px;
+    padding: 14px 0;
+  }
+
+  .achievement-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 10px;
+  }
+
+  /* Contact grid - stack to single column */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .grid-item {
+    padding: 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-radius: 14px;
+  }
+
+  .grid-item h3 {
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+
+  .grid-item p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .icon-circle {
+    margin-bottom: 0;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Navbar dock - shrink on mobile */
+  .dock {
+    gap: 0px;
+    padding: 6px 8px;
+    border-radius: 20px;
+  }
+
+  .dock-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
+  .dock-icon i {
+    font-size: 13px;
+  }
+
+  .dock-icon img {
+    width: 15px;
+    height: 15px;
+  }
+
+  .dock-separator {
+    margin: 0 2px;
+    height: 20px;
+  }
+
+  /* Hide tooltips on mobile (they cause overflow) */
+  .dock-icon::after {
+    display: none;
+  }
+
+  /* Section headings */
+  .education-card h1,
+  .experience-card h1,
+  .projects-card h1,
+  .skills-card h1,
+  .achievements-card h1,
+  .contact-card h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .about-card h2 {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  #Home, #about, #education, #experience, #projects, #skills, #achievements, #contact {
+  scroll-margin-top: 80px;
+}
+  /
